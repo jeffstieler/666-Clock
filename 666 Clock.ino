@@ -85,8 +85,17 @@ void displayTime(uint8_t hour, uint8_t minute, uint8_t second) {
 
 void loop() {
   DateTime now = rtc.now();
+  int hour = now.hour();
+  int minute = now.minute();
+  int second = now.second();
 
-  displayTime(now.hour(), now.minute(), now.second());
+  if ((hour == 7 || hour == 19) && minute == 6) {
+    // The entire reason we made this clock.
+    displayTime(hour - 1, 66, second);
+  } else {
+    // Boooooring.
+    displayTime(hour, minute, second);
+  }
 
   delay(100);
 }
