@@ -1,4 +1,6 @@
 {
+    "output": "build",
     "port": "/dev/tty.usbserial-0247A47B",
-    "board": "arduino:avr:uno"
+    "board": "arduino:avr:uno",
+    "sketch": "666 Clock.ino"
 }
