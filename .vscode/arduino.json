@@ -1,0 +1,4 @@
+{
+    "port": "/dev/tty.usbserial-0247A47B",
+    "board": "arduino:avr:uno"
+}
