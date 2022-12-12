@@ -4,6 +4,9 @@
 // Adafruit seven segment library
 #include "Adafruit_LEDBackpack.h"
 
+// madleech Button library
+#include "Button.h"
+
 // I2C address of the display.  Stick with the default address of 0x70
 // unless you've changed the address jumpers on the back of the display.
 #define DISPLAY_ADDRESS 0x70
@@ -11,12 +14,19 @@
 #define CENTER_COLON 0x02
 #define LEFT_COLON_LOWER 0x08
 #define LEFT_COLON_UPPER 0x04
+#define HOUR_BUTTON_PIN 2
+#define MINUTE_BUTTON_PIN 3
 
 RTC_PCF8523 rtc;
 Adafruit_7segment display = Adafruit_7segment();
+Button hourButton(HOUR_BUTTON_PIN);
+Button minuteButton(MINUTE_BUTTON_PIN);
 
 void setup() {
   Serial.begin(57600);
+
+  hourButton.begin();
+  minuteButton.begin();
 
   if (!rtc.begin()) {
     Serial.println("Couldn't find RTC");
@@ -89,8 +99,29 @@ void loop() {
   int minute = now.minute();
   int second = now.second();
 
+  // Note: Button::pressed() also requires a change, so it doesn't
+  // work for detecting when the button is held down.
+
+  // Handle setting the hour, when *only* the hour button is pressed.
+  if (hourButton.read() == Button::PRESSED &&
+      minuteButton.read() == Button::RELEASED) {
+    hour = (hour + 1) % 24;
+
+    rtc.adjust(
+        DateTime(now.year(), now.month(), now.day(), hour, minute, second));
+  }
+
+  // Handle setting the minute, when *only* the minute button is pressed.
+  if (minuteButton.read() == Button::PRESSED &&
+      hourButton.read() == Button::RELEASED) {
+    minute = (minute + 1) % 60;
+
+    rtc.adjust(
+        DateTime(now.year(), now.month(), now.day(), hour, minute, second));
+  }
+
+  // The entire reason we made this clock.
   if ((hour == 7 || hour == 19) && minute == 6) {
-    // The entire reason we made this clock.
     displayTime(hour - 1, 66, second);
   } else {
     // Boooooring.

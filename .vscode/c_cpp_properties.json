@@ -24,6 +24,7 @@
                 "${workspaceRoot}/libraries/Adafruit_LED_Backpack_Library",
                 "${workspaceRoot}/libraries/Adafruit_GFX_Library",
                 "${HOME}/Library/Arduino15/packages/arduino/hardware/avr/1.8.6/libraries/SPI/src",
+                "${workspaceRoot}/libraries/Button",
                 "${HOME}/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/lib/gcc/avr/7.3.0/include",
                 "${HOME}/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/lib/gcc/avr/7.3.0/include-fixed",
                 "${HOME}/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/avr/include"
