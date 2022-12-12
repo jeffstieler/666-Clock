@@ -22,6 +22,9 @@ Adafruit_7segment display = Adafruit_7segment();
 Button hourButton(HOUR_BUTTON_PIN);
 Button minuteButton(MINUTE_BUTTON_PIN);
 
+// Track when the time was set to avoid ruining the special minute surprise.
+int timeSetOnMinute = 0;
+
 void setup() {
   Serial.begin(57600);
 
@@ -109,6 +112,9 @@ void loop() {
 
     rtc.adjust(
         DateTime(now.year(), now.month(), now.day(), hour, minute, second));
+
+    // Track when the time was set to avoid ruining the special minute surprise.
+    timeSetOnMinute = minute;
   }
 
   // Handle setting the minute, when *only* the minute button is pressed.
@@ -118,14 +124,22 @@ void loop() {
 
     rtc.adjust(
         DateTime(now.year(), now.month(), now.day(), hour, minute, second));
+
+    // Track when the time was set to avoid ruining the special minute surprise.
+    timeSetOnMinute = minute;
   }
 
   // The entire reason we made this clock.
-  if ((hour == 7 || hour == 19) && minute == 6) {
+  if ((hour == 7 || hour == 19) && minute == 6 && minute != timeSetOnMinute) {
     displayTime(hour - 1, 66, second);
   } else {
     // Boooooring.
     displayTime(hour, minute, second);
+  }
+
+  // Reset the time set tracker.
+  if (minute != timeSetOnMinute) {
+    timeSetOnMinute = 0;
   }
 
   delay(100);
